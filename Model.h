@@ -5,6 +5,7 @@
 #include <QTableView>
 #include <QStringListModel>
 
+
 class QString;
 
 class Model : public QAbstractTableModel
@@ -27,6 +28,8 @@ private:
         QString firm    ;
         QString job     ;
     };
+
+    enum OPTS{OPTS_NAME, OPTS_NUMBER, OPTS_FIRM, OPTS_JOB};
 
     std::vector <model_table> vector_table;
 

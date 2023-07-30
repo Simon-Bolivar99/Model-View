@@ -3,8 +3,10 @@
 
 #include <QWidget>
 #include <QHBoxLayout>
+
 class Model;
 class QTableView;
+class QPushButton;
 
 class MainWindow : public QWidget
 {
@@ -20,6 +22,7 @@ private:
 private:
     Model *m_model;
     QTableView* m_TableView;
+    QPushButton *m_btn_add , *m_btn_rem, *m_btn_clr;
 
 };
 #endif // MAINWINDOW_H
