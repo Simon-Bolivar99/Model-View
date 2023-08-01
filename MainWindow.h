@@ -18,6 +18,10 @@ public:
 
 private:
     void createGui();
+    void connectSignals();
+    void buttonHandlerAdd();
+    void buttonHandlerClear();
+    void buttonHandlerRemove();
 
 private:
     Model *m_model;
