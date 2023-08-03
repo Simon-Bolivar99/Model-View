@@ -2,11 +2,13 @@
 #define MAINWINDOW_H
 
 #include <QWidget>
-#include <QHBoxLayout>
 
 class Model;
 class QTableView;
 class QPushButton;
+class AddDialog;
+
+struct ModelData;
 
 class MainWindow : public QWidget
 {
@@ -18,13 +20,18 @@ public:
 
 private:
     void createGui();
-    void connectSignals();
+    void connectSignals();    
+
+private slots:
     void buttonHandlerAdd();
     void buttonHandlerClear();
     void buttonHandlerRemove();
+    void dialogAssepted();
+
 
 private:
     Model *m_model;
+    AddDialog *m_dialog;
     QTableView* m_TableView;
     QPushButton *m_btn_add , *m_btn_rem, *m_btn_clr;
 

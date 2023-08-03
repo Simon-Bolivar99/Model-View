@@ -15,12 +15,12 @@ Model::~Model()
 {
 }
 
-void Model::addData(model_table table, model_table *tmp_table)
+void Model::addData(int row, int count , const ModelData& table)
 {
-    tmp_table->name     = table.name;
-    tmp_table->number   = table.number;
-    tmp_table->firm     = table.firm;
-    tmp_table->job      = table.job;
+
+    beginInsertRows(QModelIndex(),row,row+count-1);
+        vector_table.push_back(table);
+    endInsertRows();
 }
 
 
@@ -61,41 +61,6 @@ bool Model::removeRows(int row, int count, const QModelIndex &parent)
     return true;
 }
 
-bool Model::setData(const QModelIndex &index, const QVariant &value, int role)
-{
-    bool ret = false;
-
-    int row = index.row();
-    int col = index.column();
-
-    if(checkIndex(index))
-    {
-        ret = true;
-
-        if (role == Qt::EditRole)
-        {
-            switch (col)
-            {
-                case OPTS_NAME:
-                    vector_table[row].name =value.toString();
-                    break;
-                case OPTS_NUMBER:
-                    vector_table[row].number =value.toString();
-                    break;
-                case OPTS_FIRM:
-                    vector_table[row].firm =value.toString();
-                    break;
-                case OPTS_JOB:
-                    vector_table[row].job =value.toString();
-                    break;
-            }
-            emit dataChanged(index,index);
-        }
-    }
-
-    return ret;
-
-}
 
 QVariant Model::data(const QModelIndex &index, int role) const
 {
@@ -122,6 +87,28 @@ QVariant Model::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
+QVariant Model::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if (role == Qt::DisplayRole) {
+
+        if (orientation == Qt::Horizontal) {
+            switch (section) {
+                case OPTS_NAME: return QString(tr("ФИО"));
+                case OPTS_NUMBER: return QString(tr("Номер"));
+                case OPTS_FIRM: return QString(tr("Фирма"));
+                case OPTS_JOB: return QString(tr("Должность"));
+                default: break;
+            }
+        }
+        else {
+            return QString::number(section+1);
+        }
+
+    }
+
+    return QVariant();
+}
+
 void Model::init()
 {
     dataset();
@@ -130,7 +117,6 @@ void Model::init()
 
 void Model::dataset()
 {
-    vector_table.push_back({"ФИО", "Номер", "Фирма", "Должность"});
     vector_table.push_back({"Иванов Иван Иванович","+7-911-233-22-00","Петрович","Начальник"});
     vector_table.push_back({"34","ewe","ewew","343"});
     vector_table.size();

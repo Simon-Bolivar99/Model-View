@@ -21,6 +21,9 @@ set(PROJECT_SOURCES
         Model.h
         Model.cpp
         Model.cpp
+        AddDialog.h
+        AddDialog.cpp
+        icons.qrc
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
