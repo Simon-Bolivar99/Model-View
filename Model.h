@@ -13,6 +13,11 @@ struct ModelData{
     QString number;
     QString firm;
     QString job;
+    void setName(const QString& a_name){name = a_name;}
+    void setNum(const QString& a_num){number = a_num;}
+    void setFirm(const QString& a_firm){firm = a_firm;}
+    void setJob(const QString& a_job){job = a_job;}
+
 };
 
 class Model : public QAbstractTableModel
@@ -28,14 +33,18 @@ public:
     int columnCount(const QModelIndex &parent= QModelIndex()) const override;
     bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
     bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
+    bool setData(const QModelIndex &index, const QVariant &value, int role) override;
+    Qt::ItemFlags flags(const QModelIndex& index) const override;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
     QVariant data(const QModelIndex &index, int role) const override;
 
 public:
     void addData(int row, int count , const ModelData& table);
     void delData();
-    void Clear();
+    void clear();
     void resetModel();
+
+
 
 private:
 

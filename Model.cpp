@@ -61,6 +61,63 @@ bool Model::removeRows(int row, int count, const QModelIndex &parent)
     return true;
 }
 
+bool Model::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    bool ret = false;
+
+    int row = index.row();
+    int col = index.column();
+
+    if(checkIndex(index))
+    {
+        ret = true;
+
+        auto& vt = vector_table[row];
+        QString tmp;
+        if (role == Qt::EditRole)
+        {
+            switch (index.column())
+            {
+                case OPTS_NAME:
+                    tmp = vt.name;
+                    value.toString() == ""? vt.setName(tmp):vt.setName(value.toString());
+                    break;
+                case OPTS_NUMBER:
+                    tmp = vt.number;
+                    value.toString() == ""? vt.setNum(tmp):vt.setNum(value.toString());
+                    break;
+                case OPTS_FIRM:
+                    tmp = vt.firm;
+                    value.toString() == ""? vt.setFirm(tmp):vt.setFirm(value.toString());
+                    break;
+                case OPTS_JOB:
+                    tmp = vt.job;
+                    value.toString() == ""? vt.setJob(tmp):vt.setJob(value.toString());
+                    break;
+
+                default:
+                    break;
+            }
+            emit dataChanged(index, index);
+        }
+    }
+    return ret;
+}
+
+Qt::ItemFlags Model::flags(const QModelIndex &index) const
+{
+    int row[[maybe_unused]] = index.row();
+    int col = index.column();
+
+    Qt::ItemFlags flags = QAbstractTableModel::flags(index) | Qt::ItemIsDragEnabled;
+
+    if (index.isValid()) {
+        flags |= Qt::ItemIsEditable;
+    }
+
+    return flags;
+}
+
 
 QVariant Model::data(const QModelIndex &index, int role) const
 {
@@ -118,7 +175,12 @@ void Model::init()
 void Model::dataset()
 {
     vector_table.push_back({"Иванов Иван Иванович","+7-911-233-22-00","Петрович","Начальник"});
-    vector_table.push_back({"34","ewe","ewew","343"});
-    vector_table.size();
+    vector_table.push_back({"Сидоров Петр Васильевич","+7-921-344-27-12","ГазПром","Уборщик"});
+    vector_table.push_back({"Сидоров Петр Васильевич","+7-921-344-27-12","ГазПром","Уборщик"});
+    vector_table.push_back({"Сидоров Петр Васильевич","+7-921-344-27-12","ГазПром","Рабочий"});
+    vector_table.push_back({"Сидоров Петр Васильевич","+7-921-344-27-12","ГазПром","Рабочий"});
+    vector_table.push_back({"Сидоров Петр Васильевич","+7-921-344-27-12","ГазПром","Рабочий"});
+
+
 }
 

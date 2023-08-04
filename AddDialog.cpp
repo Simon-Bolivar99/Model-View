@@ -40,6 +40,7 @@ void AddDialog::buttonHandlerOk()
         QMessageBox msgbox;
         {
             msgbox.setText( tr("Введены неполные данные") );
+            msgbox.setWindowTitle(tr("ОШИБКА"));
             msgbox.setStandardButtons(QMessageBox::Ok );
             msgbox.setDefaultButton(QMessageBox::Ok);
             msgbox.setIcon(QMessageBox::Icon::Warning);
@@ -47,6 +48,24 @@ void AddDialog::buttonHandlerOk()
         }
         msgbox.exec();
         return;
+    }
+    else if(m_num->displayText()[0]!="+" && m_num->displayText().size() < 11){
+
+        QMessageBox msgbox;
+        {
+            msgbox.setText( tr("Неверный формат номера телефона (+x-ххх-хх-хх)") );
+            msgbox.setWindowTitle(tr("ОШИБКА"));
+            msgbox.setStandardButtons(QMessageBox::Ok );
+            msgbox.setDefaultButton(QMessageBox::Ok);
+            msgbox.setIcon(QMessageBox::Icon::Warning);
+            msgbox.setFixedSize( QSize(480, 240) );
+        }
+        msgbox.exec();
+        return;
+     auto x = m_num->displayText();
+    }
+    else {
+
     }
     AddDialog::hide();
     emit accepted();
