@@ -3,12 +3,14 @@
 
 #include <QWidget>
 
+class AddDialog;
 class Model;
+class QAction;
 class QTableView;
 class QPushButton;
-class AddDialog;
 class QDataWidgetMapper;
 class QLineEdit;
+class QMenu;
 class QSortFilterProxyModel;
 
 struct ModelData;
@@ -30,7 +32,8 @@ private slots:
     void buttonHandlerAdd();
     void buttonHandlerClear();
     void buttonHandlerRemove();
-    void buttonHandlerFilter();
+    void buttonHandlerSave();
+    void buttonHandlerLoad();
     void dialogAssepted();
 
 
@@ -47,7 +50,12 @@ private:
     QPushButton* m_btn_clr;
     QPushButton* m_btn_save;
     QPushButton* m_btn_load;
-    QPushButton* m_btn_srch;
+
+    QMenu* m_menu;
+
+    QAction* m_rm_act;
+    QAction* m_cp_act;
+    QAction* m_ed_act;
 
     QLineEdit* m_line_srch;
 

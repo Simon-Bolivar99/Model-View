@@ -13,6 +13,10 @@
 #include <QMessageBox>
 #include <QSortFilterProxyModel>
 #include <QLineEdit>
+#include <QAction>
+#include <QMenu>
+
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent)
@@ -22,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent)
     m_model = new Model(this);
     m_dialog = new AddDialog (this);
     createGui();
-    //connectSignals();
+    connectSignals();
 }
 
 MainWindow::~MainWindow()
@@ -49,17 +53,22 @@ void MainWindow::createGui()
         m_btn_load->setIcon(QIcon(":/icons/icons/load.svg"));
         m_btn_save->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
-    m_btn_srch = new QPushButton();
-        m_btn_srch->setIcon(QIcon(":/icons/icons/search.svg"));
-        m_btn_srch->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+
     m_line_srch = new QLineEdit();
+        m_line_srch->setPlaceholderText(tr("Поиск"));
+        m_line_srch->addAction(QIcon(":/icons/icons/search.svg"), QLineEdit::TrailingPosition);
 
     m_TableView = new QTableView;
         m_TableView->setEditTriggers(QAbstractItemView::DoubleClicked);
 
-    m_TableView->setModel(m_model);
     m_filter = new QSortFilterProxyModel();
+
     m_filter->setSourceModel(m_model);
+        m_filter->setFilterKeyColumn(-1);
+        m_filter->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    m_TableView->setModel(m_filter);
+
+
 
     auto hh = m_TableView->horizontalHeader();
         hh->setSectionResizeMode(Model::OPTS_NAME,   QHeaderView::ResizeMode::Stretch);
@@ -76,7 +85,6 @@ void MainWindow::createGui()
         button_layout->addWidget(m_btn_load);
 
     auto searh_layout = new QHBoxLayout;
-        searh_layout->addWidget(m_btn_srch);
         searh_layout->addWidget(m_line_srch);
         searh_layout->addStretch();
 
@@ -85,10 +93,14 @@ void MainWindow::createGui()
         m_layout->addWidget(m_TableView,   1, 0);
         m_layout->addLayout(searh_layout,  2, 0);
 
-
+    m_menu = new QMenu;
+        m_menu->addAction(m_ed_act);
+        m_menu->addSeparator();
+        m_menu->addAction(m_rm_act);
 
         setLayout(m_layout);
 }
+
 
 void MainWindow::connectSignals()
 {
@@ -99,13 +111,17 @@ void MainWindow::connectSignals()
 
     connect(m_btn_clr, &QPushButton::clicked, this, &MainWindow::buttonHandlerClear);
 
-    connect(m_btn_srch, &QPushButton::clicked, this, &MainWindow::buttonHandlerFilter);
+    connect(m_btn_save,&QPushButton::clicked, this, &MainWindow::buttonHandlerSave);
+
+    connect(m_btn_load,&QPushButton::clicked, this, &MainWindow::buttonHandlerLoad);
 
     /*           DIALOG                   */
     connect(m_dialog,  &QDialog::accepted,    this, &MainWindow::dialogAssepted);
 
     /*           FILTER                   */
-    connect(m_filter, &QSortFilterProxyModel::filterCaseSensitivityChanged, this, &MainWindow::buttonHandlerFilter);
+    connect(m_line_srch, &QLineEdit::returnPressed, this, [this]() {
+        m_filter->setFilterFixedString(m_line_srch->text());
+    });
 
     /*           MAPPER                   */
     //connect(m_mapper, &QDataWidgetMapper::currentIndexChanged, m_model, &QTableView::selectRow);
@@ -153,11 +169,15 @@ void MainWindow::buttonHandlerRemove()
         m_model->removeRows(0, 1);
 }
 
-void MainWindow::buttonHandlerFilter()
+void MainWindow::buttonHandlerSave()
 {
 
 }
 
+void MainWindow::buttonHandlerLoad()
+{
+
+}
 
 
 void MainWindow::dialogAssepted()
