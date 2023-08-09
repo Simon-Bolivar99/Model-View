@@ -53,7 +53,7 @@ private:
 
 private:
 
-    std::vector <ModelData> vector_table;
+    std::vector<ModelData> m_data;
 
 
 private:

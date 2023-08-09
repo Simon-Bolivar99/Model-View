@@ -27,6 +27,7 @@ private:
     void createGui();
     void connectSignals();
     void setMainWindowModel();
+    void createActions();
 
 private slots:
     void buttonHandlerAdd();
@@ -55,7 +56,7 @@ private:
 
     QAction* m_rm_act;
     QAction* m_cp_act;
-    QAction* m_ed_act;
+    QAction* m_add_act;
 
     QLineEdit* m_line_srch;
 

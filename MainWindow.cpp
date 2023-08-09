@@ -2,6 +2,9 @@
 #include "AddDialog.h"
 #include "Model.h"
 
+#include <fstream>
+#include <nlohmann/json.hpp>
+
 #include <QPushButton>
 #include <QLineEdit>
 #include <QGridLayout>
@@ -25,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     m_model = new Model(this);
     m_dialog = new AddDialog (this);
+    createActions();
     createGui();
     connectSignals();
 }
@@ -42,6 +46,7 @@ void MainWindow::createGui()
     m_btn_rem = new QPushButton();
         m_btn_rem->setIcon(QIcon(":/icons/icons/negative.svg"));
         m_btn_rem->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+
     m_btn_clr = new QPushButton();
         m_btn_clr->setIcon(QIcon(":/icons/icons/cross.svg"));
         m_btn_clr->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
@@ -60,6 +65,8 @@ void MainWindow::createGui()
 
     m_TableView = new QTableView;
         m_TableView->setEditTriggers(QAbstractItemView::DoubleClicked);
+        m_TableView->setContextMenuPolicy(Qt::CustomContextMenu);
+        m_TableView->setSelectionBehavior(QAbstractItemView::SelectRows);
 
     m_filter = new QSortFilterProxyModel();
 
@@ -67,7 +74,6 @@ void MainWindow::createGui()
         m_filter->setFilterKeyColumn(-1);
         m_filter->setFilterCaseSensitivity(Qt::CaseInsensitive);
     m_TableView->setModel(m_filter);
-
 
 
     auto hh = m_TableView->horizontalHeader();
@@ -94,9 +100,13 @@ void MainWindow::createGui()
         m_layout->addLayout(searh_layout,  2, 0);
 
     m_menu = new QMenu;
-        m_menu->addAction(m_ed_act);
+
+        m_menu->addAction(m_add_act);
         m_menu->addSeparator();
         m_menu->addAction(m_rm_act);
+
+
+
 
         setLayout(m_layout);
 }
@@ -123,8 +133,29 @@ void MainWindow::connectSignals()
         m_filter->setFilterFixedString(m_line_srch->text());
     });
 
+    /*           ACTION                   */
+
+    connect(m_rm_act, &QAction::triggered, this, &MainWindow::buttonHandlerRemove);
+
+    connect(m_add_act, &QAction::triggered, this, &MainWindow::buttonHandlerAdd);
+
+    /*           TABLE                    */
+
+    connect(m_TableView, &QTableView::customContextMenuRequested, this, [this](const QPoint &pos){
+       auto index = m_filter->mapToSource(m_TableView->indexAt(pos));
+       if (index.row() >= 0){
+           m_menu ->popup(m_TableView->viewport()->mapToGlobal(pos));
+       }
+    });
+
     /*           MAPPER                   */
     //connect(m_mapper, &QDataWidgetMapper::currentIndexChanged, m_model, &QTableView::selectRow);
+}
+
+void MainWindow::createActions()
+{
+    m_rm_act = new QAction(QIcon(":/icons/icons/negative.svg"),tr("&Удалить"),this);
+    m_add_act = new QAction(QIcon(":/icons/icons/positive.svg"),tr("&Добавить"),this);
 }
 
 
@@ -158,25 +189,34 @@ void MainWindow::buttonHandlerRemove()
 {
     QMessageBox msgbox;
     {
-        msgbox.setText( tr("Вы уверены, что хотите удалить последнюю строку?") );
-        msgbox.setWindowTitle(tr("ОШИБКА"));
+        msgbox.setText( tr("Вы уверены, что хотите удалить выделеные строки") );
+        msgbox.setWindowTitle(tr("ПРЕДУПРЕЖДЕНИЕ"));
         msgbox.setStandardButtons(QMessageBox::Yes | QMessageBox::No );
         msgbox.setDefaultButton(QMessageBox::Yes);
         msgbox.setIcon(QMessageBox::Icon::Warning);
         msgbox.setFixedSize( QSize(480, 240) );
     }
-    if (msgbox.exec() == QMessageBox::Yes)
-        m_model->removeRows(0, 1);
+    if (msgbox.exec() == QMessageBox::Yes) {
+
+        while(1) {
+            auto sel = m_TableView->selectionModel()->selectedRows();
+            if (sel.empty())
+                break;
+
+            auto idx = m_filter->mapToSource(m_filter->index(sel.at(0).row(), 0));
+            m_model->removeRow(idx.row());
+        }
+    }
 }
 
 void MainWindow::buttonHandlerSave()
 {
-
+    return;
 }
 
 void MainWindow::buttonHandlerLoad()
 {
-
+    return;
 }
 
 
@@ -186,5 +226,6 @@ void MainWindow::dialogAssepted()
         m_dialog->getData(data);
         m_model->addData(0,1,data);
 }
+
 
 

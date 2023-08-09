@@ -24,6 +24,7 @@ set(PROJECT_SOURCES
         AddDialog.h
         AddDialog.cpp
         icons.qrc
+        nlohmann/json.hpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

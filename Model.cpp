@@ -19,14 +19,14 @@ void Model::addData(int row, int count , const ModelData& table)
 {
 
     beginInsertRows(QModelIndex(),row,row+count-1);
-        vector_table.push_back(table);
+        m_data.push_back(table);
     endInsertRows();
 }
 
 
 int Model::rowCount(const QModelIndex &parent) const
 {
-    return vector_table.size();
+    return m_data.size();
 }
 
 int Model::columnCount(const QModelIndex &parent) const
@@ -40,22 +40,22 @@ bool Model::insertRows(int row, int count, const QModelIndex &parent)
         return false;
 
     beginInsertRows(QModelIndex(),row,row+count-1);
-        vector_table.push_back({"1","1","1","1"});
+        m_data.push_back({"1","1","1","1"});
     endInsertRows();
     return true;
 }
 
 bool Model::removeRows(int row, int count, const QModelIndex &parent)
 {
-    if (row >= 0 && row < vector_table.size()){
-       count = ((row + count) > vector_table.size())? vector_table.size() - row : count;
+    if (row >= 0 && row < m_data.size()){
+       count = ((row + count) > m_data.size())? m_data.size() - row : count;
        beginRemoveRows(QModelIndex(),row,row+count-1);
 
-       if(row == 0 && count == vector_table.size())
-           vector_table.clear();
+       if(row == 0 && count == m_data.size())
+           m_data.clear();
        else
            for(int i = 0; i<count ;i++)
-               vector_table.pop_back();
+               m_data.erase(m_data.begin() + i);
        endRemoveRows();
     }
     return true;
@@ -72,7 +72,7 @@ bool Model::setData(const QModelIndex &index, const QVariant &value, int role)
     {
         ret = true;
 
-        auto& vt = vector_table[row];
+        auto& vt = m_data[row];
         QString tmp;
         if (role == Qt::EditRole)
         {
@@ -127,16 +127,16 @@ QVariant Model::data(const QModelIndex &index, int role) const
         switch(index.column())
         {
         case (OPTS_NAME):
-            unswer = vector_table[index.row()].name;
+            unswer = m_data[index.row()].name;
             break;
         case (OPTS_NUMBER):
-            unswer = vector_table[index.row()].number;
+            unswer = m_data[index.row()].number;
             break;
         case (OPTS_FIRM):
-            unswer = vector_table[index.row()].firm;
+            unswer = m_data[index.row()].firm;
             break;
         case (OPTS_JOB):
-            unswer = vector_table[index.row()].job;
+            unswer = m_data[index.row()].job;
             break;
         }
         return QVariant(unswer);
@@ -174,13 +174,13 @@ void Model::init()
 
 void Model::dataset()
 {
-    vector_table.push_back({"Иванов Иван Иванович","+7-911-233-22-00","Петрович","Начальник"});
-    vector_table.push_back({"Сидоров Николай Васильевич","+7-921-118-29-99","ГазПром","Уборщик"});
-    vector_table.push_back({"Петров  Василий Юрьевич","+7-911-233-38-44","ГазПром","Уборщик"});
-    vector_table.push_back({"Васечкин Петр Михайлович","+7-921-344-27-12","ГазПром","Рабочий"});
-    vector_table.push_back({"Равшан Аскерович","+7-800-555-35-35","СтройКа","Гастарбайтер"});
-    vector_table.push_back({"Джамшут Фарухович","+7-921-234-14-04","СтройКа","Гастарбайтер"});
-    vector_table.push_back({"Дулин Иван Олегович","+7-921-139-29-99","ЧЗМ","Фрезеровщик"});
+    m_data.push_back({"Иванов Иван Иванович","+7-911-233-22-00","Петрович","Начальник"});
+    m_data.push_back({"Сидоров Николай Васильевич","+7-921-118-29-99","ГазПром","Уборщик"});
+    m_data.push_back({"Петров  Василий Юрьевич","+7-911-233-38-44","ГазПром","Уборщик"});
+    m_data.push_back({"Васечкин Петр Михайлович","+7-921-344-27-12","ГазПром","Рабочий"});
+    m_data.push_back({"Равшан Аскерович","+7-800-555-35-35","СтройКа","Гастарбайтер"});
+    m_data.push_back({"Джамшут Фарухович","+7-921-234-14-04","СтройКа","Гастарбайтер"});
+    m_data.push_back({"Дулин Иван Олегович","+7-921-139-29-99","ЧЗМ","Фрезеровщик"});
 
 }
 
