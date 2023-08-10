@@ -4,7 +4,7 @@
 #include <QAbstractTableModel>
 #include <QTableView>
 #include <QStringListModel>
-
+#include <nlohmann/json.hpp>
 
 class QString;
 
@@ -43,6 +43,10 @@ public:
     void delData();
     void clear();
     void resetModel();
+    void toJson(QString path) const;
+    void fromJson(QString path);
+
+public:
 
 
 

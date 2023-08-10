@@ -3,7 +3,7 @@
 #include "Model.h"
 
 #include <fstream>
-#include <nlohmann/json.hpp>
+
 
 #include <QPushButton>
 #include <QLineEdit>
@@ -18,10 +18,10 @@
 #include <QLineEdit>
 #include <QAction>
 #include <QMenu>
+#include <QFileDialog>
 
 #include <QDebug>
 
-using json = nlohmann::json;
 
 MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent)
@@ -213,13 +213,16 @@ void MainWindow::buttonHandlerRemove()
 
 void MainWindow::buttonHandlerSave()
 {
-    std::ifstream f("file.json");
-    json data = json::parse(f);
+
+    QString fname = QFileDialog::getSaveFileName(this, tr("Сохранить телефонную книгу"), "" , tr("*.json")); 
+    m_model->toJson(fname);
 
 }
 
 void MainWindow::buttonHandlerLoad()
 {
+    QString fname = QFileDialog::getOpenFileName(this, tr("Загрузить телефонную книгу"), "" , tr("*.json"));
+    m_model->fromJson(fname);
     return;
 }
 

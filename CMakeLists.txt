@@ -23,6 +23,8 @@ set(PROJECT_SOURCES
         Model.cpp
         AddDialog.h
         AddDialog.cpp
+        utils.h
+        utils.cpp
         icons.qrc
         nlohmann/json.hpp
 )

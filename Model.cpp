@@ -1,9 +1,13 @@
 #include "Model.h"
+#include "utils.h"
+#include <nlohmann/json.hpp>
+
 #include <algorithm>
 #include <iterator>
 #include <QVariant>
 #include <QString>
 #include <vector>
+
 
 Model::Model(QObject*parent)
     : QAbstractTableModel(parent)
@@ -20,6 +24,61 @@ void Model::addData(int row, int count , const ModelData& table)
 
     beginInsertRows(QModelIndex(),row,row+count-1);
         m_data.emplace(m_data.begin()+ row,table);
+        endInsertRows();
+}
+
+void Model::toJson(QString path) const
+{
+    nlohmann::json json;
+    for (const auto& data :qAsConst(m_data)){
+        nlohmann::json fields;
+            fields["name"]   = data.name.toStdString();
+            fields["number"] = data.number.toStdString();
+            fields["firm"]   = data.firm.toStdString();
+            fields["job"]    = data.job.toStdString();
+        json.push_back(fields);
+    }
+    writeToFile(path +".json", json);
+}
+
+void Model::fromJson(QString path)
+{
+
+    nlohmann::json json;
+    readFromFile(path, json);
+
+   std::vector <ModelData>  vec;
+    if ( !json.is_array() )
+        return;
+
+    for(const auto& it: json){
+        if(!it.is_object())
+            continue;
+
+        ModelData s;
+
+        if(it.contains("name"))
+            if(it["name"].is_string())
+                s.setName(it.value("name", QString()));
+
+        if(it.contains("number"))
+            if(it["number"].is_string())
+                s.setNum(it.value("number", QString()));
+
+        if(it.contains("firm"))
+            if(it["firm"].is_string())
+                s.setFirm(it.value("firm", QString()));
+
+        if(it.contains("job"))
+            if(it["job"].is_string())
+                s.setJob(it.value("job", QString()));
+
+        vec.push_back(s);
+    }
+
+    m_data.clear();
+    beginInsertRows(QModelIndex(), 0, vec.size()-1);
+        m_data = vec;
     endInsertRows();
 }
 
@@ -171,6 +230,8 @@ void Model::init()
 
 void Model::dataset()
 {
+
+    /*
     m_data.push_back({"Иванов Иван Иванович","+7-911-233-22-00","Петрович","Начальник"});
     m_data.push_back({"Сидоров Николай Васильевич","+7-921-118-29-99","ГазПром","Уборщик"});
     m_data.push_back({"Петров  Василий Юрьевич","+7-911-233-38-44","ГазПром","Уборщик"});
@@ -178,6 +239,6 @@ void Model::dataset()
     m_data.push_back({"Равшан Аскерович","+7-800-555-35-35","СтройКа","Гастарбайтер"});
     m_data.push_back({"Джамшут Фарухович","+7-921-234-14-04","СтройКа","Гастарбайтер"});
     m_data.push_back({"Дулин Иван Олегович","+7-921-139-29-99","ЧЗМ","Фрезеровщик"});
-
+    */
 }
 
