@@ -21,6 +21,8 @@
 
 #include <QDebug>
 
+using json = nlohmann::json;
+
 MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent)
     , m_mapper(new QDataWidgetMapper(this))
@@ -198,20 +200,22 @@ void MainWindow::buttonHandlerRemove()
     }
     if (msgbox.exec() == QMessageBox::Yes) {
 
-        while(1) {
-            auto sel = m_TableView->selectionModel()->selectedRows();
-            if (sel.empty())
-                break;
 
-            auto idx = m_filter->mapToSource(m_filter->index(sel.at(0).row(), 0));
-            m_model->removeRow(idx.row());
-        }
+            auto sel = m_TableView->selectionModel()->selectedRows();
+            if (!sel.empty())
+            {
+                auto idx = m_filter->mapToSource(m_filter->index(sel.at(0).row(), 0));
+                m_model->removeRows(idx.row(),sel.size());
+            }
+
     }
 }
 
 void MainWindow::buttonHandlerSave()
 {
-    return;
+    std::ifstream f("file.json");
+    json data = json::parse(f);
+
 }
 
 void MainWindow::buttonHandlerLoad()
@@ -224,7 +228,17 @@ void MainWindow::dialogAssepted()
 {
     ModelData data;
         m_dialog->getData(data);
-        m_model->addData(0,1,data);
+
+        auto sel = m_TableView->selectionModel()->selectedRows();
+        if (!sel.empty()){
+            auto idx = m_filter->mapToSource(m_filter->index(sel.at(0).row(), 0));
+            m_model->addData(idx.row(),1,data);
+        }
+        else
+            m_model->addData(0,1,data);
+
+
+
 }
 
 

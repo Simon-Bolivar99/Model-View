@@ -19,7 +19,7 @@ void Model::addData(int row, int count , const ModelData& table)
 {
 
     beginInsertRows(QModelIndex(),row,row+count-1);
-        m_data.push_back(table);
+        m_data.emplace(m_data.begin()+ row,table);
     endInsertRows();
 }
 
@@ -47,17 +47,14 @@ bool Model::insertRows(int row, int count, const QModelIndex &parent)
 
 bool Model::removeRows(int row, int count, const QModelIndex &parent)
 {
-    if (row >= 0 && row < m_data.size()){
-       count = ((row + count) > m_data.size())? m_data.size() - row : count;
        beginRemoveRows(QModelIndex(),row,row+count-1);
 
        if(row == 0 && count == m_data.size())
            m_data.clear();
        else
-           for(int i = 0; i<count ;i++)
-               m_data.erase(m_data.begin() + i);
+           m_data.erase(m_data.begin() + row , m_data.begin() + row + count);
        endRemoveRows();
-    }
+
     return true;
 }
 
