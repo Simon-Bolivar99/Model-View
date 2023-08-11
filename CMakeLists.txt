@@ -14,25 +14,26 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 
-set(PROJECT_SOURCES
-        main.cpp
-        MainWindow.cpp
-        MainWindow.h
-        Model.h
-        Model.cpp
-        Model.cpp
-        AddDialog.h
-        AddDialog.cpp
-        utils.h
-        utils.cpp
-        icons.qrc
-        nlohmann/json.hpp
+set(PROJECT_MAIN main.cpp )
+
+file(GLOB PROJECT_SOURCES
+        "src/MainWindow.cpp"
+        "include/MainWindow.h"
+        "include/Model.h"
+        "src/Model.cpp"
+        "src/Model.cpp"
+        "include/AddDialog.h"
+        "src/AddDialog.cpp"
+        "libs/utils.h"
+        "libs/utils.cpp"
+        "res/icons.qrc"
+        "libs/nlohmann/json.hpp"
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(Model_View
         MANUAL_FINALIZATION
-        ${PROJECT_SOURCES}
+        ${PROJECT_SOURCES} ${PROJECT_MAIN}
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET Model_View APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -41,13 +42,13 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 else()
     if(ANDROID)
         add_library(Model_View SHARED
-            ${PROJECT_SOURCES}
+            ${PROJECT_SOURCES} ${PROJECT_MAIN}
         )
 # Define properties for Android with Qt 5 after find_package() calls as:
 #    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
     else()
         add_executable(Model_View
-            ${PROJECT_SOURCES}
+            ${PROJECT_SOURCES} ${PROJECT_MAIN}
         )
     endif()
 endif()
