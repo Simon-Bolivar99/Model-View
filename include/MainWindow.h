@@ -1,5 +1,4 @@
-﻿#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+﻿#pragma once
 
 #include <QWidget>
 
@@ -15,13 +14,13 @@ class QSortFilterProxyModel;
 
 struct ModelData;
 
-class MainWindow : public QWidget
+class MainWindow: public QWidget
 {
     Q_OBJECT
 
 public:
     MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+     virtual ~MainWindow() override = default;
 
 private:
     void createGui();
@@ -63,4 +62,4 @@ private:
     QDataWidgetMapper* m_mapper;
 
 };
-#endif // MAINWINDOW_H
+

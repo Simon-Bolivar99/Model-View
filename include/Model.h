@@ -1,10 +1,10 @@
-"#ifndef MODEL_H
+#ifndef MODEL_H
 #define MODEL_H
 
 #include <QAbstractTableModel>
 #include <QTableView>
 #include <QStringListModel>
-#include <nlohmann/json.hpp>
+#include <nlohmann/json_fwd.hpp>
 
 class QString;
 

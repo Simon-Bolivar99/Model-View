@@ -1,7 +1,7 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include <nlohmann/json.hpp>
+#include <nlohmann/json_fwd.hpp>
 
 class QString;
 

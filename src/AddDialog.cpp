@@ -1,5 +1,5 @@
-#include "AddDialog.h"
-#include "Model.h"
+#include "include/AddDialog.h"
+#include "include/Model.h"
 
 #include <QPushButton>
 #include <QLineEdit>

@@ -1,6 +1,6 @@
-#include "MainWindow.h"
-#include "AddDialog.h"
-#include "Model.h"
+#include "include/MainWindow.h"
+#include "include/AddDialog.h"
+#include "include/Model.h"
 
 #include <fstream>
 
@@ -35,9 +35,6 @@ MainWindow::MainWindow(QWidget *parent)
     connectSignals();
 }
 
-MainWindow::~MainWindow()
-{
-}
 
 void MainWindow::createGui()
 {
@@ -116,7 +113,6 @@ void MainWindow::createGui()
 
 void MainWindow::connectSignals()
 {
-    /*           BUTTONS                  */
     connect(m_btn_add, &QPushButton::clicked, this, &MainWindow::buttonHandlerAdd);
 
     connect(m_btn_rem, &QPushButton::clicked, this, &MainWindow::buttonHandlerRemove);
@@ -127,21 +123,18 @@ void MainWindow::connectSignals()
 
     connect(m_btn_load,&QPushButton::clicked, this, &MainWindow::buttonHandlerLoad);
 
-    /*           DIALOG                   */
+
     connect(m_dialog,  &QDialog::accepted,    this, &MainWindow::dialogAssepted);
 
-    /*           FILTER                   */
     connect(m_line_srch, &QLineEdit::returnPressed, this, [this]() {
         m_filter->setFilterFixedString(m_line_srch->text());
     });
 
-    /*           ACTION                   */
 
     connect(m_rm_act, &QAction::triggered, this, &MainWindow::buttonHandlerRemove);
 
     connect(m_add_act, &QAction::triggered, this, &MainWindow::buttonHandlerAdd);
 
-    /*           TABLE                    */
 
     connect(m_TableView, &QTableView::customContextMenuRequested, this, [this](const QPoint &pos){
        auto index = m_filter->mapToSource(m_TableView->indexAt(pos));
@@ -150,8 +143,12 @@ void MainWindow::connectSignals()
        }
     });
 
-    /*           MAPPER                   */
     //connect(m_mapper, &QDataWidgetMapper::currentIndexChanged, m_model, &QTableView::selectRow);
+}
+
+void MainWindow::setMainWindowModel()
+{
+
 }
 
 void MainWindow::createActions()
@@ -243,6 +240,7 @@ void MainWindow::dialogAssepted()
 
 
 }
+
 
 
 

@@ -8,26 +8,24 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
+find_package(QT NAMES Qt6 Qt5 COMPONENTS Core REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Widgets Gui REQUIRED)
+find_package(nlohmann_json 3.10.5 REQUIRED)
 
-set(PROJECT_MAIN main.cpp )
-
-file(GLOB PROJECT_SOURCES
-        "src/MainWindow.cpp"
-        "include/MainWindow.h"
-        "include/Model.h"
-        "src/Model.cpp"
-        "src/Model.cpp"
-        "include/AddDialog.h"
-        "src/AddDialog.cpp"
-        "libs/utils.h"
-        "libs/utils.cpp"
-        "res/icons.qrc"
-        "libs/nlohmann/json.hpp"
+set(PROJECT_SOURCES
+        src/MainWindow.cpp
+        src/main.cpp
+        src/Model.cpp
+        src/AddDialog.cpp
+        include/Model.h
+        include/AddDialog.h
+        include/MainWindow.h
+        libs/utils.h
+        libs/utils.cpp
+        res/icons.qrc
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -53,7 +51,11 @@ else()
     endif()
 endif()
 
-target_link_libraries(Model_View PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(Model_View PRIVATE
+    Qt${QT_VERSION_MAJOR}::Widgets
+    Qt${QT_VERSION_MAJOR}::Core
+    #Qt${QT_VERSION_MAJOR}::Gui
+)
 
 set_target_properties(Model_View PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
