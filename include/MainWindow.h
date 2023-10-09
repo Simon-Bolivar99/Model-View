@@ -4,6 +4,7 @@
 
 class AddDialog;
 class Model;
+class PenColor;
 class QAction;
 class QTableView;
 class QPushButton;
@@ -50,6 +51,8 @@ private:
     QPushButton* m_btn_clr;
     QPushButton* m_btn_save;
     QPushButton* m_btn_load;
+
+    PenColor *PenCol;
 
     QMenu* m_menu;
 

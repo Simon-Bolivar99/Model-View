@@ -1,6 +1,7 @@
 #include "include/MainWindow.h"
 #include "include/AddDialog.h"
 #include "include/Model.h"
+#include "include/PenColor.h"
 
 #include <fstream>
 
@@ -38,6 +39,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 void MainWindow::createGui()
 {
+
     m_dialog->hide();
     m_btn_add = new QPushButton();
         m_btn_add->setIcon(QIcon(":/icons/icons/positive.svg"));
@@ -45,6 +47,8 @@ void MainWindow::createGui()
     m_btn_rem = new QPushButton();
         m_btn_rem->setIcon(QIcon(":/icons/icons/negative.svg"));
         m_btn_rem->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+    PenCol = new PenColor(this);
+         PenCol->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
     m_btn_clr = new QPushButton();
         m_btn_clr->setIcon(QIcon(":/icons/icons/cross.svg"));
@@ -85,6 +89,8 @@ void MainWindow::createGui()
         button_layout->addWidget(m_btn_add);
         button_layout->addWidget(m_btn_rem);
         button_layout->addWidget(m_btn_clr);
+        button_layout->addStretch();
+        //button_layout->addWidget(PenCol);
         button_layout->addStretch();
         button_layout->addWidget(m_btn_save);
         button_layout->addWidget(m_btn_load);

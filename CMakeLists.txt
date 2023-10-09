@@ -26,6 +26,16 @@ set(PROJECT_SOURCES
         libs/utils.h
         libs/utils.cpp
         res/icons.qrc
+
+        src/PenColor.cpp
+        src/CustomDelegate.cpp
+        src/ComboLineBox.cpp
+        include/MainWindow.h
+        include/ComboLineBox.h
+        include/PenColor.h
+        include/CustomDelegate.h
+        libs/ColorToolButton.cpp
+        libs/ColorToolButton.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
